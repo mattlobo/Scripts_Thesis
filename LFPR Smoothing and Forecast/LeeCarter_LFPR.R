@@ -19,6 +19,8 @@ leecarter <- function(lfpr){
 # The file interpolated_rates.csv is a file with LFPR for all years.
 # Years are columns and Ages are Rows
 # I believe it can be easily done with R, feel free to try.
+# interpolated_files.csv can be downloaded at:
+# https://github.com/mattlobo/Scripts_Thesis/blob/master/Files/interpolated_rates.csv
 data <- read.csv("interpolated_rates.csv", header = F)
 data <- data[ , -1]
 years <- seq(1980, 2013)
