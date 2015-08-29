@@ -83,7 +83,8 @@ qplot(data = plot.data.select, x = age, y = LFPR, colour = factor(Year), geom = 
   main = "LFPR Brazil - Selected Years", xlab = "Ages") + facet_wrap(~Year) + theme(legend.position = "none")
 
 qplot(data = plot.data.select, x = age, y = LFPR, colour = factor(Year), geom = "line", 
-  main = "LFPR Brazil - Selected Years", xlab = "Ages") + theme(legend.title = element_text(size = 12, face = "bold")) +
+  main = "LFPR Brazil - Selected Years", xlab = "Ages") + theme(legend.title = 
+                                                                  element_text(size = 12, face = "bold")) +
   scale_color_discrete(name = "Year")
 
 qplot(data = plot.data, x = age, y = LFPR, colour = factor(Year), geom = "line", 

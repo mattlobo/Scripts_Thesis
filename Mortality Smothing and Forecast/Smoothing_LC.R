@@ -154,13 +154,18 @@ plot.data$age <- rep(seq(0, 80), each = 1, times = 46)
 plot.data.select <- subset(plot.data, Year %in% c(1980, 1991, 2000, 2010, 2015, 2020, 2025))
 
 qplot(data = plot.data.select, x = age, y = nMx, colour = factor(Year), geom = "line", 
-      main = "Death Rates Brazil - Selected Years") + facet_wrap(~Year) + theme(legend.position = "none")
+      main = "Death Rates Brazil - Selected Years", xlab = "Ages", ylab = "Death Rates") + 
+  facet_wrap(~Year) + theme(legend.position = "none")
 
 qplot(data = plot.data.select, x = age, y = nMx, colour = factor(Year), geom = "line", 
-      main = "Death Rates Brazil - Selected Years")
+      main = "Death Rates Brazil - Selected Years", xlab = "Ages", ylab = "Death Rates") + theme(legend.title = 
+                                                              element_text(size = 12, face = "bold")) +
+  scale_color_discrete(name = "Year")
 
 qplot(data = plot.data, x = age, y = nMx, colour = factor(Year), geom = "line", 
-      main = "Death Rates Brazil") + guides(col = guide_legend(ncol = 4))
+      main = "Death Rates Brazil", xlab = "Ages", ylab = "Death Rates") + 
+  theme(legend.title = element_text(size = 12, face = "bold")) +
+  scale_color_discrete(name = "Year") + guides(col = guide_legend(ncol = 4))
 
 parameters$age <- seq(0, 80)
 qplot(data = parameters, x = age, y = model.ax, geom = "line")
@@ -171,6 +176,9 @@ plot.kt <- kt
 plot.kt <- as.data.frame(plot.kt)
 plot.kt$years <- seq(1980, 2010)
 qplot(data = plot.kt, x = years, y = kt, geom = "line")
+
+
+
 
 
 # Creating Life Tables for all Census years (1980 - 2010)
