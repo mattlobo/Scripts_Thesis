@@ -8,7 +8,8 @@ years <- c(1979, seq(1981, 1990, 1), 1992, 1993, seq(1995, 1999, 1), seq(2001, 2
 # Create a vector with all the ages (10 - 80)
 ages <- c(seq(10, 80, 1))
 
-# Function to do LOESS smoothing, the smoothing constant is selected by AIC_C
+# Function to do LOESS smoothing, the smoothing parameter is selected by AIC_C
+# by Kyle Gorman <gormanky@ohsu.edu>
 
 aicc.loess <- function(fit) {
   # compute AIC_C for a LOESS fit, from:
