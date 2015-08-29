@@ -1,12 +1,26 @@
 # Original Death and Population Files downloaded from lamortalidad.org
+# Death Counts: http://www.lamortalidad.org/wp-content/uploads/2012/09/Brazil_Deaths.txt
+# Population: http://www.lamortalidad.org/wp-content/uploads/2012/09/Brazil_Population.txt
 
 # Reading the Death Counts
-setwd("~/Documents/Monografia/Mortality")
-deaths <- read.csv("Brazil_Deaths.txt", header = T, sep = "\t")
+# Download the files to your working directory
+# setwd("~/Documents/Monografia/Mortality")
+# name the Death counts as deaths (above) for the script to run smoothly
+# deaths <- read.csv("Brazil_Deaths.txt", header = T, sep = "\t")
 
 # The last Brazilian Census was 2010, so that's the last year I will use, yes ik I'm ignoring 2011, 2012, and 2013
 c.deaths <- subset(deaths, Year <= 2010 & Year > 1979)
 
+# The correction factor for Brazilian Death Counts were obttained from:
+#######################################################################
+# LIMA, Everton Emanuel Campos de  and  QUEIROZ, Bernardo Lanza. 
+# Evolution of the deaths registry system in Brazil: associations with 
+# changes in the mortality profile, under-registration of death counts, 
+# and ill-defined causes of death. Cad. Saúde Pública [online]. 
+# 2014, vol.30, n.8 [cited  2015-08-29], pp. 1721-1730 . 
+#######################################################################
+
+# Interpolating
 correction.factors <- approx(c(1975, 1985, 1995, 2005), c(0.840, 0.901, 0.946, 0.9891), xout = seq(1980, 2005))$y
 
 # Completeness factors per year
