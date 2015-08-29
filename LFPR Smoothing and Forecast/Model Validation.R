@@ -16,6 +16,10 @@ leecarter <- function(lfpr){
 }
 
 # Importing file and making sure it is the required format ages x years, the file is called interpolated_rates
+# The Interpolated rates for the Years 1980, 1991, 1994, 2000, and 2010 were done in Excel
+# The file interpolated_rates.csv is a file with LFPR for all years.
+# Years are columns and Ages are Rows
+# I believe it can be easily done with R, feel free to try.
 setwd("~/Documents/Monografia/Labor Rates/")
 data <- read.csv("interpolated_rates.csv", header = F)
 data <- data[ , -1]
