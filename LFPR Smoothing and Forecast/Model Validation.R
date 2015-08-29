@@ -79,4 +79,4 @@ plot.data$age <- rep(seq(10, 80), each = 1, times = 46)
 plot.data.validation <- subset(plot.data, Year %in% c(2013))
 
 qplot(data = plot.data.validation, x = age, y = LFPR, colour = factor(Year), geom = "line", 
-      main = "LFPR Brazil - Selected Years") + facet_wrap(~Year) + theme(legend.position = "none")
+      main = "LFPR Brazil - Selected Year", xlab = "Ages") + facet_wrap(~Year) + theme(legend.position = "none")
