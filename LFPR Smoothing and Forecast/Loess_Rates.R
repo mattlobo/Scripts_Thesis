@@ -1,8 +1,11 @@
 # Import file with the rates, years are columns and ages (starting from 10 yrs old) are rows
-data <- read.csv("~/Documents/Monografia/ELRP/Data/original.rates.csv", dec = ".", header = F)
-setwd("~/Documents/Monografia/ELRP/Data")
+# You need a file with the LFPR calculated for Single-Age groups.
+# Read the file from your working directory.
+# setwd("~/Documents/Monografia/ELRP/Data")
+# data <- read.csv("~/Documents/Monografia/ELRP/Data/original.rates.csv", dec = ".", header = F)
 
 # Create a vector with all the years you have available
+# In this case data is not available for 1980, 1991, 1994, 2000, and 2010
 years <- c(1979, seq(1981, 1990, 1), 1992, 1993, seq(1995, 1999, 1), seq(2001, 2009, 1), 2011, 2012, 2013)
 
 # Create a vector with all the ages (10 - 80)
@@ -53,6 +56,8 @@ for (i in 1:length(years)){
 # Creates a data frame from the original matrix and saves it as a csv file
 new.rates <- as.data.frame(rates.loess, row.names = NULL)
 colnames(new.rates) <- years
-write.csv(x = new.rates, file = "new.rates.csv")
+
+# Write a csv file with your smoothed rates
+# write.csv(x = new.rates, file = "new.rates.csv")
 
 
