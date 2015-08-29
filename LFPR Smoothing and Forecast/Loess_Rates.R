@@ -60,5 +60,3 @@ colnames(new.rates) <- years
 # Write a csv file with your smoothed rates
 # write.csv(x = new.rates, file = "new.rates.csv")
 
-
-

@@ -14,7 +14,11 @@ leecarter <- function(lfpr){
 }
 
 # Importing file and making sure it is the required format ages x years, the file is called interpolated_rates
-setwd("~/Documents/Monografia/Labor Rates/")
+# setwd("~/Documents/Monografia/Labor Rates/")
+# The Interpolated rates for the Years 1980, 1991, 1994, 2000, and 2010 were done in Excel
+# The file interpolated_rates.csv is a file with LFPR for all years.
+# Years are columns and Ages are Rows
+# I believe it can be easily done with R, feel free to try.
 data <- read.csv("interpolated_rates.csv", header = F)
 data <- data[ , -1]
 years <- seq(1980, 2013)
@@ -90,4 +94,4 @@ qplot(data = parameters, x = age, y = model.bx, geom = "line")
 plot.kt <- kt
 plot.kt <- as.data.frame(plot.kt)
 plot.kt$years <- seq(1980, 2013)
-qplot(data = plot.kt, x = years, y = kt, geom = "line")
+qplot(data = plot.kt, x = years, y = kt)
