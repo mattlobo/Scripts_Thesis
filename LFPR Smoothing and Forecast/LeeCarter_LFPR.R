@@ -111,7 +111,7 @@ plot.f.kt$Year <- c(rep(seq(1980, 2025), times = 1),
                     rep(seq(2014, 2025), times = 1))
 colnames(plot.f.kt) <- c("kt", "Type", "Year")
 
-qplot(data = plot.f.kt, x = Years, y = kt, geom = "line", colour = Type, main = "LFPR Model kt with Forecasts 
-      and Confidence Interval") +
+qplot(data = plot.f.kt, x = Year, y = kt, geom = "line", colour = Type, main = "LFPR Model kt with Forecasts 
+      and Confidence Interval", xlab = "Years") +
   scale_color_manual(values=c("#000000", "#006699", "#006699")) + 
   theme(legend.position = "none")
