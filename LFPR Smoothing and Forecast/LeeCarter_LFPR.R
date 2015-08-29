@@ -100,3 +100,18 @@ plot.kt <- kt
 plot.kt <- as.data.frame(plot.kt)
 plot.kt$years <- seq(1980, 2013)
 qplot(data = plot.kt, x = years, y = kt, main = "LFPR Model kt", ylsb = "kt", xlab = "Ages")
+
+plot.f.kt <- c(kt, kt.forecast, kt.lo.forecast, kt.hi.forecast)
+plot.f.kt <- as.data.frame(plot.f.kt)
+plot.f.kt$Type <- c(rep("Forecast", times = sum(length(kt), length(kt.forecast))),
+                    rep("Low", times = length(kt.lo.forecast)),
+                    rep("High", times = length(kt.hi.forecast)))
+plot.f.kt$Year <- c(rep(seq(1980, 2025), times = 1),
+                    rep(seq(2014, 2025), times = 1),
+                    rep(seq(2014, 2025), times = 1))
+colnames(plot.f.kt) <- c("kt", "Type", "Year")
+
+qplot(data = plot.f.kt, x = Years, y = kt, geom = "line", colour = Type, main = "LFPR Model kt with Forecasts 
+      and Confidence Interval") +
+  scale_color_manual(values=c("#000000", "#006699", "#006699")) + 
+  theme(legend.position = "none")
