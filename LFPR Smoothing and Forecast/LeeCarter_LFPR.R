@@ -80,20 +80,23 @@ plot.data$age <- rep(seq(10, 80), each = 1, times = 46)
 plot.data.select <- subset(plot.data, Year %in% c(1980, 1991, 2000, 2010, 2015, 2020, 2025))
 
 qplot(data = plot.data.select, x = age, y = LFPR, colour = factor(Year), geom = "line", 
-      main = "LFPR Brazil - Selected Years") + facet_wrap(~Year) + theme(legend.position = "none")
+  main = "LFPR Brazil - Selected Years", xlab = "Ages") + facet_wrap(~Year) + theme(legend.position = "none")
 
 qplot(data = plot.data.select, x = age, y = LFPR, colour = factor(Year), geom = "line", 
-      main = "LFPR Brazil - Selected Years")
+  main = "LFPR Brazil - Selected Years", xlab = "Ages") + theme(legend.title = element_text(size = 12, face = "bold")) +
+  scale_color_discrete(name = "Year")
 
 qplot(data = plot.data, x = age, y = LFPR, colour = factor(Year), geom = "line", 
-      main = "LFPR Brazil") + guides(col = guide_legend(ncol = 4))
+  main = "LFPR Brazil", xlab = "Ages") + guides(col = guide_legend(ncol = 4)) + 
+  theme(legend.title = element_text(size = 12, face = "bold")) +
+  scale_color_discrete(name = "Year")
 
 parameters$age <- seq(10, 80)
-qplot(data = parameters, x = age, y = model.ax, geom = "line")
+qplot(data = parameters, x = age, y = model.ax, geom = "line", main = "LFPR Model ax", ylab = "ax", xlab = "Ages")
 
-qplot(data = parameters, x = age, y = model.bx, geom = "line")
+qplot(data = parameters, x = age, y = model.bx, geom = "line", main = "LFPR Model bx", ylab = "bx", xlab = "Ages")
 
 plot.kt <- kt
 plot.kt <- as.data.frame(plot.kt)
 plot.kt$years <- seq(1980, 2013)
-qplot(data = plot.kt, x = years, y = kt)
+qplot(data = plot.kt, x = years, y = kt, main = "LFPR Model kt", ylsb = "kt", xlab = "Ages")
