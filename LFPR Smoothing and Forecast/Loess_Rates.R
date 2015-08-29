@@ -1,8 +1,10 @@
 # Import file with the rates, years are columns and ages (starting from 10 yrs old) are rows
 # You need a file with the LFPR calculated for Single-Age groups.
 # Read the file from your working directory.
-setwd("~/Documents/Monografia/Labor Rates/")
-data <- read.csv("~/Documents/Monografia/Labor Rates/original_rates.csv", dec = ".", header = F)
+# setwd("~/Documents/Monografia/Labor Rates/")
+# original_rates.csv available at:
+# https://github.com/mattlobo/Scripts_Thesis/blob/master/Files/original_rates.csv
+# data <- read.csv("~/Documents/Monografia/Labor Rates/original_rates.csv", dec = ".", header = F)
 
 # Create a vector with all the years you have available
 # In this case data is not available for 1980, 1991, 1994, 2000, and 2010
