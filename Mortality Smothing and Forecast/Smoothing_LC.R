@@ -243,4 +243,4 @@ LT7 <- life.table(newages, Projection_3$nMx)
 names <- list("LT1", "LT2", "LT3", "LT4", "LT5", "LT6", "LT7")
 
 library(WriteXLS)
-WriteXLS(names, "LifeTables.xlsx")
+# WriteXLS(names, "LifeTables.xlsx")
