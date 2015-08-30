@@ -168,18 +168,30 @@ qplot(data = plot.data, x = age, y = nMx, colour = factor(Year), geom = "line",
   scale_color_discrete(name = "Year") + guides(col = guide_legend(ncol = 4))
 
 parameters$age <- seq(0, 80)
-qplot(data = parameters, x = age, y = model.ax, geom = "line")
+qplot(data = parameters, x = age, y = model.ax, geom = "line", main = "LFPR Model ax", ylab = "ax", xlab = "Ages")
 
-qplot(data = parameters, x = age, y = model.bx, geom = "line")
+qplot(data = parameters, x = age, y = model.bx, geom = "line", main = "LFPR Model bx", ylab = "bx", xlab = "Ages")
 
 plot.kt <- kt
 plot.kt <- as.data.frame(plot.kt)
 plot.kt$years <- seq(1980, 2010)
-qplot(data = plot.kt, x = years, y = kt, geom = "line")
+qplot(data = plot.kt, x = years, y = kt, main = "LFPR Model kt", geom = "line", ylab = "kt", xlab = "Ages")
 
 
+plot.f.kt <- c(kt, kt.forecast, kt.lo.forecast, kt.hi.forecast)
+plot.f.kt <- as.data.frame(plot.f.kt)
+plot.f.kt$Type <- c(rep("Forecast", times = sum(length(kt), length(kt.forecast))),
+                    rep("Low", times = length(kt.lo.forecast)),
+                    rep("High", times = length(kt.hi.forecast)))
+plot.f.kt$Year <- c(rep(seq(1980, 2025), times = 1),
+                    rep(seq(2011, 2025), times = 1),
+                    rep(seq(2011, 2025), times = 1))
+colnames(plot.f.kt) <- c("kt", "Type", "Year")
 
-
+qplot(data = plot.f.kt, x = Year, y = kt, geom = "line", colour = Type, main = "Death Rates Model kt with Forecasts 
+      and Confidence Interval", xlab = "Years") +
+  scale_color_manual(values=c("#000000", "#006699", "#006699")) + 
+  theme(legend.position = "none")
 
 # Creating Life Tables for all Census years (1980 - 2010)
 
