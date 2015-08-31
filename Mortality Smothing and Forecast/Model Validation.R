@@ -15,7 +15,80 @@ leecarter <- function(nmx){
   return(result)
 }
 
-# The file used as input in the function is the rates data.frame generated above
+setwd("~/Documents/Monografia/Mortality")
+# Loading required packages
+library("gdata")
+library("reshape2")
+
+# Reading Death counts file
+# The file/spreadsheet used is nothing more than the death counts corrected by the completeness factors
+# Columns are years and rows are age groups
+deaths <- read.xls("Corrected_Data.xlsx", sheet = "Origial_Death_Counts", header = TRUE)
+colnames(deaths) <- c("Age", seq(1980, 2010))
+
+# Melting data to reshape it
+deaths <- melt(deaths, id.vars = "Age", variable.name = "Year", value.name = "Deaths")
+
+# Reading Population file (Exposures)
+# The file/spreadsheet used is nothing more than theinterpolated population for each year 
+# Columns are years and rows are age groups
+population <- read.xls("Corrected_Data.xlsx", sheet = "Original_Population_Estimates", header = TRUE)
+colnames(population) <- c("Age", seq(1980, 2010))
+
+# Melting data to reshape it
+population <- melt(population, id.vars = "Age", variable.name = "Year", value.name = "Population")
+
+# Reading data into the Model
+D.vec <- deaths$Deaths
+E.vec <- population$Population
+
+# Loading package
+library(MortalitySmooth)
+
+# Preparing the domains and data in matrices
+A <- unique(as.numeric(as.character(deaths$Age)))
+Y <- unique(deaths$Year)
+D.mat <- matrix(D.vec, length(A), length(Y))
+E.mat <- matrix(E.vec, length(A), length(Y))
+
+# Select the data
+agemax <- 80
+x <- A[A <= agemax]
+Y <- as.integer(Y)
+y <- Y
+D <- D.mat[A <= agemax, ]
+E <- E.mat[A <= agemax, ]
+
+# Fit with 2D P-splines
+# Default: optimal smoothing parameters selected by BIC
+fitPS <- Mort2Dsmooth(x = x, y = y, Z = D, offset = log(E))
+
+# Default plot: shaded contour plot
+plot(fitPS)
+
+# Plotting with perspective plot
+persp(x, y, fitPS$logmortality, theta = -30,
+      col = "red", shade=TRUE, xlab = "Ages (0-80)",
+      ylab="Years (1980 - 2010)", zlab = "Mortality rate (log)")
+
+# Plotting deviance residuals
+# Histogram
+hist(residuals(fitPS), breaks=100)
+
+# Interpolating death rates to each individual age
+newages <- seq(0, 80, length = 81)
+newdata <- list(x = newages)
+pre <- predict(fitPS, newdata = newdata, se.fit = TRUE)
+
+persp(newages, y, pre$fit, theta = -30,
+      col="red", shade = 1, border = "black",  xlab = "Ages (0-80)",
+      ylab="Years (1980-2010)", zlab="Mortality rate (log)")
+
+rates <- exp(pre$fit)
+colnames(rates) <- seq(1980, 2010)
+rates <- melt(rates, value.name = "nMx")
+colnames(rates) <- c("Age", "Year", "nMx")
+
 # Subsetting the rates files in order to select only the years used in the modelo validation
 rates <- subset(rates, Year %in% seq(1980, 1996))
 data <- dcast(rates, Age ~ Year, value.var = "nMx")
