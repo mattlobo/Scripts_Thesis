@@ -21,14 +21,48 @@ setwd("~/Documents/Monografia/Labor Rates/")
 # I believe it can be easily done with R, feel free to try.
 # interpolated_files.csv can be downloaded at:
 # https://github.com/mattlobo/Scripts_Thesis/blob/master/Files/interpolated_rates.csv
-data <- read.csv("interpolated_rates.csv", header = F)
-data <- data[ , -1]
-years <- seq(1980, 2013)
+# data <- read.csv("interpolated_rates.csv", header = F)
+# data <- data[ , -1]
+# years <- seq(1980, 2013)
+# f.years <- seq(2014, 2025)
+# ages <- seq(10, 80)
+
+# Read the original file with rates estimated for the PNAD years
+data <- read.csv("original_rates.csv", header = F)
+
+# Create vector with the years available  and call it original_years
+original_years <- c(1979, seq(1981, 1990, 1), 1992, 1993, seq(1995, 1999, 1), seq(2001, 2009, 1), 2011, 2012, 2013)
+
+# The years vector contains all the years (even the ones you're abaout to interpolate)
+years <- (seq(1979, 2013))
+
+# Creates the Ages column in the data.frame original_rates
+original_rates$Ages <- seq(10, 80)
+
+# Use the melt function from the reshape2 package to melt the original rates file
+m.rates <- melt(original_rates, id.vars = "Ages", variable.name = "Years", value.name = "LFPR")
+
+# The new rates file still has only the original rates for the PNAD years (no interpolation here)
+new_rates <- dcast(data = m.rates, formula = Years~Ages)
+
+# Converts the new_rates data.frame to a Matrix (important when dealing with the interppolation, but 'll check later)
+new_rates <- data.matrix(new.rates)
+
+# Creates a matrix that will receive all the interpolted rates
+i.rates <- matrix(nrow = 35, ncol = 71)
+
+# Actually interpolting the LFPR for all years
+for (i in 2:72){
+i.rates[, i-1] <- approx(x = years, y = new.rates[, i], xout = 1979:2013)$y
+}
+
+# No changes from this point forward, pls, pls check if everything works
+
 f.years <- seq(2014, 2025)
 ages <- seq(10, 80)
 
 # Only transpose if the data is in the format years x ages
-lfpr <- t(data)
+lfpr <- t(i.rates)
 
 # Fitting the Lee-Carter model
 model <- leecarter(lfpr)
