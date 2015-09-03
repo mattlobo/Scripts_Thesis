@@ -21,7 +21,7 @@ leecarter <- function(lfpr){
 # Years are columns and Ages are Rows
 # I believe it can be easily done with R, feel free to try.
 setwd("~/Documents/Monografia/Labor Rates/")
-data <- read.csv("interpolated_rates.csv", header = F)
+data <- read.csv("interpolated_rates.csv", header = T)
 data <- data[ , -1]
 validation <- data[ , 1:22]
 years <- seq(1980, 2001)
