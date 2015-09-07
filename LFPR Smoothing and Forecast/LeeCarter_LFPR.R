@@ -38,7 +38,7 @@ data <- data[ , -1]
 years <- (seq(1979, 2013))
 
 # Create vector with the years available  and call it original_years
-or.years <- c(1979, seq(1981, 1990, 1), 1992, 1993, seq(1995, 1999, 1), seq(2001, 2009, 1), 2011, 2012, 2013)
+or.years <- c(1979, seq(1981, 1990, 1), 1992, 1993, seq(1995, 1999, 1), seq(2001, 2008, 1), 2011, 2012, 2013)
 
 colnames(data) <- or.years
 

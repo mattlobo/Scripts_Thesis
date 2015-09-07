@@ -25,7 +25,7 @@ pnad.dbname <- "pnad.db"
 
 # Insert year you want to calculate statistics for
 
-years <- c(2001)
+years <- c(2002, 2003, 2004, 2005, 2006, 2007, 2008, 2011, 2012, 2013)
 
 for (year.to.analyze in years){
 
@@ -84,6 +84,6 @@ y <-
 
 new.y <- subset(y, v8005 >= 10 & v0302 == 2)
 
-data <- svyby(~one, ~agecat+v9001+v9115, new.y , svytotal)
+data <- svyby(~one, ~agecat+v9001+v9115+v9002, new.y , svytotal)
 write.csv(data, paste0("ages.working.males.", year.to.analyze, ".csv"))
 }

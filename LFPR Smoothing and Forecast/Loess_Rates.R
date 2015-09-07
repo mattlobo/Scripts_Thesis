@@ -60,5 +60,5 @@ new.rates <- as.data.frame(rates.loess, row.names = NULL)
 colnames(new.rates) <- years
 
 # Write a csv file with your smoothed rates
-write.csv(x = new.rates, file = "smoothed.rates.csv")
+write.csv(x = new.rates, file = "smoothed_rates.csv")
 
