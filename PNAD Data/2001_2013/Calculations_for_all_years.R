@@ -7,13 +7,15 @@ library(survey)		# load survey package (analyzes complex design surveys)
 library(RSQLite) 	# load RSQLite package (creates database files in R)
 library(stringr) 	# load stringr package (manipulates character strings easily)
 
+setwd("~/Documents/Monografia/PNAD/Microdata/2001 - 2013")
+
 # set R to produce conservative standard errors instead of crashing
 # http://r-survey.r-forge.r-project.org/survey/exmample-lonely.html
 options( survey.lonely.psu = "adjust" )
 # this setting matches the MISSUNIT option in SUDAAN
 
 # load pnad-specific functions (to remove invalid SAS input script fields and postStratify a database-backed survey object)
-source( "/Users/mlobo/Documents/Monografia/PNAD/Scripts/2001_2013/Function2.R" , prompt = FALSE )
+source( "/Users/mlobo/Documents/Monografia/Scripts_Thesis/PNAD Data/2001_2013/Function2.R" , prompt = FALSE )
 
 if ( .Platform$OS.type != 'windows' ){
 	options( encoding="windows-1252" )
@@ -23,7 +25,7 @@ pnad.dbname <- "pnad.db"
 
 # Insert year you want to calculate statistics for
 
-years <- c(2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2011, 2012, 2013)
+years <- c(2001)
 
 for (year.to.analyze in years){
 
