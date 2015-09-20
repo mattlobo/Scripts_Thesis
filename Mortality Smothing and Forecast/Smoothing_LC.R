@@ -53,7 +53,7 @@ plot(fitPS)
 
 # Plotting with perspective plot
 persp(x, y, fitPS$logmortality, theta = -30,
-      col = "red", shade=TRUE, xlab = "Ages (0-80)",
+      col = "green", shade=TRUE, xlab = "Ages (0-80)",
       ylab="Years (1980 - 2010)", zlab = "Mortality rate (log)")
 
 # Plotting deviance residuals
@@ -65,8 +65,8 @@ newages <- seq(0, 80, length = 81)
 newdata <- list(x = newages)
 pre <- predict(fitPS, newdata = newdata, se.fit = TRUE)
 
-persp(newages, y, pre$fit, theta = -30,
-      col="red", shade = 1, border = "black",  xlab = "Ages (0-80)",
+persp(newages, y, pre$fit, theta = -28,
+      col="green", shade = 1, border = "black",  xlab = "Ages (0-80)",
       ylab="Years (1980-2010)", zlab="Mortality rate (log)")
 
 rates <- exp(pre$fit)
