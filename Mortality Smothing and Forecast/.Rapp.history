@@ -1,0 +1,9 @@
+correction.factors <- approx(c(1975, 1985, 1995, 2005), c(0.840, 0.901, 0.946, 0.9891), xout = seq(1980, 2005))$y
+correction.factors
+length(correction.factors)
+length(seq(1980, 2005))
+completeness <- c(rep(correction.factors, each = 18), rep(tail(correction.factors, 1), each = 18, times = 4), #
+                  rep(1, each = 18))
+length(completeness)
+length(completeness)/18
+completeness

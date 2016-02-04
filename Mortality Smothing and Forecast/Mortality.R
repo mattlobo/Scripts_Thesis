@@ -6,7 +6,7 @@
 # Download the files to your working directory
 # setwd("~/Documents/Monografia/Mortality")
 # name the Death counts as deaths (above) for the script to run smoothly
-# deaths <- read.csv("Brazil_Deaths.txt", header = T, sep = "\t")
+deaths <- read.csv("Brazil_Deaths.txt", header = T, sep = "\t")
 
 # The last Brazilian Census was 2010, so that's the last year I will use, yes ik I'm ignoring 2011, 2012, and 2013
 c.deaths <- subset(deaths, Year <= 2010 & Year > 1979)
@@ -82,3 +82,41 @@ library(ggplot2)
 
 qplot(data = melt.pop.data, x = Age, y = Population, geom = "line", colour = factor(Year), 
       main = "Brazilian Population: 1980 - 2010") + guides(col = guide_legend(ncol = 2))
+
+PIA <- c()
+for (i in 1:nrow(melt.pop.data)) {
+  if (melt.pop.data$Age[i] >= 10) {
+    ifelse (melt.pop.data$Age[i] < 65, PIA[i] <- melt.pop.data$Population[i], PIA[i] <- NA)
+  } 
+}
+PIA <- as.data.frame(PIA)
+PIA$Year <- melt.pop.data$Year
+PIA <- na.exclude(PIA)
+
+tapply(PIA$PIA, PIA$Year, FUN = sum)
+
+
+Old.Age <- c()
+for (i in 1:nrow(melt.pop.data)) {
+  if (melt.pop.data$Age[i] >= 65) {
+    Old.Age[i] <- melt.pop.data$Population[i]
+  }
+}
+Old.Age <- as.data.frame(Old.Age)
+Old.Age$Year <- melt.pop.data$Year 
+Old.Age <- na.exclude(Old.Age)
+
+tapply(Old.Age$Old.Age, Old.Age$Year, FUN = sum)
+
+Percentage <- tapply(Old.Age$Old.Age, Old.Age$Year, FUN = sum) / tapply(PIA$PIA, PIA$Year, FUN = sum)
+Dep.Ratio <- as.data.frame(Percentage)
+Dep.Ratio$Year <- seq(1980, 2010, 1)
+Dep.Ratio$Type <- rep("Dependency Ratio", 31)
+
+
+Contribuintes <- c(53964928, 55877835, 60197924, 64109870, 67246063, 69669481)
+Beneficiários <- c(25975630, 26831267, 27999034, 28909419, 29883423, 31028250)
+
+SS.Ratio <- Contribuintes/Beneficiários
+
+qplot(data = Dep.Ratio, x = Year, y = Percentage)
