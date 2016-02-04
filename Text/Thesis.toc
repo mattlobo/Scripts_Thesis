@@ -1,0 +1,31 @@
+\changetocdepth {4}
+\select@language {brazil}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {1}\MakeTextUppercase {Introdu\IeC {\c c}\IeC {\~a}o }}{13}{chapter.1}
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {2}\MakeTextUppercase {Contextualiza\IeC {\c c}\IeC {\~a}o }}{15}{chapter.2}
+\contentsline {section}{\numberline {2.1}A previd\IeC {\^e}ncia social no Brasil }{15}{section.2.1}
+\contentsline {section}{\numberline {2.2}A din\IeC {\^a}mica demogr\IeC {\'a}fica brasileira }{16}{section.2.2}
+\contentsline {section}{\numberline {2.3}Mercado de trabalho no Brasil }{17}{section.2.3}
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {3}\MakeTextUppercase {Dados e M\IeC {\'e}todos }}{19}{chapter.3}
+\contentsline {section}{\numberline {3.1}Dados de Popula\IeC {\c c}\IeC {\~a}o e Mortalidade }{19}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}Corre\IeC {\c c}\IeC {\~a}o de Subregistro de \IeC {\'O}bitos }{19}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.2}Interpola\IeC {\c c}\IeC {\~a}o das Taxas de Mortalidade }{20}{subsection.3.1.2}
+\contentsline {section}{\numberline {3.2}Dados de Mercado de Trabalho }{21}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Suaviza\IeC {\c c}\IeC {\~a}o das Taxas Refinadas de Atividade }{22}{subsection.3.2.1}
+\contentsline {section}{\numberline {3.3}Modelo Lee--Carter }{22}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Modelo Lee-Carter para proje\IeC {\c c}\IeC {\~a}o de Taxas de Atividade }{23}{subsection.3.3.1}
+\contentsline {section}{\numberline {3.4}A dura\IeC {\c c}\IeC {\~a}o esperada da Aposentadoria (ELRP) }{23}{section.3.4}
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {4}\MakeTextUppercase {Resultados }}{25}{chapter.4}
+\contentsline {section}{\numberline {4.1}Evolu\IeC {\c c}\IeC {\~a}o das Taxas de Mortalidade }{25}{section.4.1}
+\contentsline {section}{\numberline {4.2}Evolu\IeC {\c c}\IeC {\~a}o das Taxas de Atividade }{27}{section.4.2}
+\contentsline {section}{\numberline {4.3}A dura\IeC {\c c}\IeC {\~a}o esperada da aposentadoria }{29}{section.4.3}
+\contentsline {section}{\numberline {4.4}Discuss\IeC {\~a}o }{30}{section.4.4}
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {5}\MakeTextUppercase {Conclus\IeC {\~a}o }}{33}{chapter.5}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\contentsline {chapter}{\uppercase {Refer\^encias}}{35}{section*.20}
