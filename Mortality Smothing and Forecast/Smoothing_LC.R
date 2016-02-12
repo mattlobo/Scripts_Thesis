@@ -81,6 +81,37 @@ colnames(rates) <- c("Age", "Year", "nMx")
 # Forecasting LFPR using the Lee-Carter Method
 # Original R code by Bernardo Queiroz
 
+# Function to calculate Life Tables
+life.table <- function(x, nMx){
+  # simple lifetable using Keyfitz and Flieger separation factors and 
+  # exponential tail of death distribution (to close out life table)
+  b0 <- 0.07;   b1<- 1.7;      
+  nmax <- length(x)
+  #nMx = nDx/nKx   
+  n <- c(diff(x), 999)          		  # width of the intervals
+  nax <- n/2;		            	        # default to .5 of interval
+  nax[1] <- b0 + b1 * nMx[1]    		  # from Keyfitz & Flieger(1968)
+  nax[nmax] <- 1/nMx[nmax] 	  	      # e_x at open age interval
+  nqx <- (n * nMx) / (1 + (n - nax) * nMx)
+  nqx<-ifelse(nqx > 1, 1, nqx);		    # necessary for high nMx
+  nqx[nmax] <- 1.0
+  lx <- c(1, cumprod(1 - nqx));   	  # survivorship lx
+  lx <- lx[1:length(nMx)]
+  ndx <- lx * nqx;
+  nLx <- n * lx - nax * ndx;      	 # equivalent to n*l(x+n) + (n-nax)*ndx
+  nLx[nmax] <- lx[nmax] * nax[nmax]
+  Tx <- rev(cumsum(rev(nLx)))
+  ex <- ifelse( lx[1:nmax] > 0, Tx/lx[1:nmax], NA);
+  lt <- data.frame(Ages = x, nqx = nqx, lx = lx, ndx = ndx, nLx = nLx, Tx = Tx, ex = ex, nMx = nMx)
+  return(lt)
+}
+
+# Function to get the life expectancy of a newborn
+
+get.e0 <- function(x){
+  return(life.table(newages, x)$ex[1])
+}
+
 # Function to estimate the parameters of the model
 leecarter <- function(nmx){
   log.nmx <- log(nmx)
@@ -93,11 +124,62 @@ leecarter <- function(nmx){
   return(result)
 }
 
+# Functions related to the "jump-off" fix
+nmx.from.kt <- function (kt, ax, bx){
+  # Derives mortality rates from kt mortality index, 
+  #   per Lee-Carter method
+  nmx <- exp((bx[1:80] * kt) + ax[1:80])
+  nmx[nmx > 1] <- 1
+  nmx[nmx == 0] <- 1
+  return(nmx)
+}
+
+iterative.kt <- function (e0, ax, bx){
+  # Given e(0), search for mortality index k(t) per Lee-Carter method
+  step.size <- 20
+  guess.kt <- 0
+  last.guess <- c("high")
+  how.close <- 5
+  while(abs(how.close)>.001){
+    nmx <- nmx.from.kt(guess.kt,ax,bx)
+    guess.e0 <- get.e0(nmx)
+    how.close <- e0 - guess.e0
+    if (how.close>0){
+      # our guess is too low and must decrease kt
+      if (last.guess==c("low")) {step.size <- step.size/2
+      }
+      guess.kt <- guess.kt - step.size
+      last.guess<- c("high")
+      }
+    if (how.close<0){
+      # our guess is too high and must increase kt
+      if (last.guess==c("high")) {step.size <- step.size/2
+      }
+      guess.kt <- guess.kt + step.size
+      last.guess <- c("low")
+      }
+  }
+  return (guess.kt)
+}
+
+# Estimate nMx from kt
+
+nmx.from.kt <- function (kt, ax, bx){
+  nmx <- exp((bx * kt) + ax)
+  nmx[nmx>1] <- 1
+  nmx[nmx==0] <- 1
+  return(nmx)
+}
+
 # The file used as input in the function is the rates data.frame generated above
 
 data <- dcast(rates, Age ~ Year, value.var = "nMx")
 data <- data[, -1]
 nmx <- t(data)
+
+# Check to see if the get.e0 function works
+e0.male <- apply(nmx, 1, get.e0)
+e0.male <- unname(e0.male)
 
 # The data.frame data already has the necessary format years x ages
 years <- seq(1980, 2010)
@@ -113,17 +195,41 @@ model$ax <- unname(model$ax)
 parameters <- data.frame(model$ax, model$bx)
 kt <- model$kt
 
+# Estimate second stage ("jump-off") kt
+
+end.year <- 2010
+start.year <- 1980
+len.series <- end.year - start.year + 1
+kt.secondstage <- rep(0,len.series)
+
+for (i in 1:len.series){
+  kt.secondstage[i] <- iterative.kt(e0.male[i], parameters$model.ax, parameters$model.bx)
+}
+
+# Generating new nmx based on the second stage kt
+
+male.nmx.est <- matrix (0, length(years), length(newages))
+
+for (i in 1:length(years)){
+  year <- 1979 + i
+  male.nmx.est[i, ] <- nmx.from.kt(kt.secondstage[i], parameters$model.ax, parameters$model.bx)
+}
+
+dimnames (male.nmx.est) <- list(seq(1980,2010), seq(0, 80))
+
 # Preparing kt for forecasting
-kt.diff <- diff(kt)
+kt.diff <- diff(kt.secondstage)
 summary.kt <- summary(lm(kt.diff ~ 1))
 kt.drift <- summary.kt$coefficients[1,1]
 sec <- summary.kt$coefficients[1,2]
 see <- summary.kt$sigma
 
 # Actually forecasting kt
+mort.finalyear <- male.nmx.est[31,]
+kt.initial <- iterative.kt(unname(e0.male[31]), log(mort.finalyear), parameters$model.bx)
 h <- seq(0, 14)
 kt.stderr <- ( (h*see^2) + (h*sec)^2 )^.5
-kt.forecast <- tail(kt, 1) + (h * kt.drift)
+kt.forecast <- kt.initial + (h * kt.drift)
 kt.lo.forecast <- kt.forecast - (1.96*kt.stderr)
 kt.hi.forecast <- kt.forecast + (1.96*kt.stderr)
 
@@ -194,30 +300,6 @@ qplot(data = plot.f.kt, x = Year, y = kt, geom = "line", colour = Type, main = "
   theme(legend.position = "none")
 
 # Creating Life Tables for all Census years (1980 - 2010)
-
-life.table <- function( x, nMx){
-  # simple lifetable using Keyfitz and Flieger separation factors and 
-  # exponential tail of death distribution (to close out life table)
-  b0 <- 0.07;   b1<- 1.7;      
-  nmax <- length(x)
-  #nMx = nDx/nKx   
-  n <- c(diff(x), 999)          		  # width of the intervals
-  nax <- n/2;		            	        # default to .5 of interval
-  nax[1] <- b0 + b1 * nMx[1]    		  # from Keyfitz & Flieger(1968)
-  nax[nmax] <- 1/nMx[nmax] 	  	      # e_x at open age interval
-  nqx <- (n * nMx) / (1 + (n - nax) * nMx)
-  nqx<-ifelse(nqx > 1, 1, nqx);		    # necessary for high nMx
-  nqx[nmax] <- 1.0
-  lx <- c(1, cumprod(1 - nqx));   	  # survivorship lx
-  lx <- lx[1:length(nMx)]
-  ndx <- lx * nqx;
-  nLx <- n * lx - nax * ndx;      	 # equivalent to n*l(x+n) + (n-nax)*ndx
-  nLx[nmax] <- lx[nmax] * nax[nmax]
-  Tx <- rev(cumsum(rev(nLx)))
-  ex <- ifelse( lx[1:nmax] > 0, Tx/lx[1:nmax], NA);
-  lt <- data.frame(Ages = x, nqx = nqx, lx = lx, ndx = ndx, nLx = nLx, Tx = Tx, ex = ex, nMx = nMx)
-  return(lt)
-}
 
 Census_1 <- subset(rates, Year %in% 1980)
 LT1 <- life.table(newages, Census_1$nMx)
