@@ -1,3 +1,8 @@
+########################################################
+########IMPORTANT: 81 ARE AGES AND 46 ARE YEARS#########
+###ALSO, SOMETIMES I REMOVED ROWS BELOW THE AGE OF 50###
+########################################################
+
 # Setting work directory
 setwd("~/Documents/Monografia/Labor Rates/")
 
@@ -114,5 +119,36 @@ sx[seq(1, 51), ] <- 1
 for (j in 1:ncol(sx)){
   for (i in 51:nrow(sx)){
     sx[i, j] <- lx[i, j]/lx[51, j]
+  }
+}
+
+dimnames(sx) <- list(newages, seq(1980, 2025))
+
+# Get rho for all years (probability of surviving until age 50 at age 20)
+rho <- c()
+
+for (i in 1:46){
+  rho[i] <- lx[51, i]/lx[21, i]
+}
+
+# Now we will eliminate unecessary information sx, nqx and ex
+sx <- sx[-seq(1,50), ]
+nqx <- nqx[-seq(1,50), ]
+ex <- ex[-seq(1,50), ]
+
+# Now calculate the average life expectancy
+avg.ex <- matrix(0, 31, 46)
+for (i in 1:nrow(avg.ex)-1){
+  avg.ex[i, ] <-  (ex[i, ]+ex[i+1, ])/2 
+}
+avg.ex[31, ] <- ex[31, ]/2
+
+# ELRP calculation
+
+ELRP <- matrix(0, 31, 46)
+
+for (i in 1:nrow(ELRP)){
+  for(i in 1:ncol(ELRP)){
+    ELRP[i, j] <- sx[i, j]*gamma[i, j]
   }
 }
