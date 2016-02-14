@@ -218,18 +218,20 @@ for (i in 1:length(years)){
 dimnames (male.nmx.est) <- list(seq(1980,2010), seq(0, 80))
 
 # Preparing kt for forecasting
-kt.diff <- diff(kt.secondstage)
+# kt.diff <- diff(kt.secondstage)
+kt.diff <- diff(kt)
 summary.kt <- summary(lm(kt.diff ~ 1))
 kt.drift <- summary.kt$coefficients[1,1]
 sec <- summary.kt$coefficients[1,2]
 see <- summary.kt$sigma
 
 # Actually forecasting kt
-mort.finalyear <- male.nmx.est[31,]
-kt.initial <- iterative.kt(unname(e0.male[31]), log(mort.finalyear), parameters$model.bx)
+# mort.finalyear <- male.nmx.est[31,]
+# kt.initial <- iterative.kt(unname(e0.male[31]), log(mort.finalyear), parameters$model.bx)
 h <- seq(0, 14)
 kt.stderr <- ( (h*see^2) + (h*sec)^2 )^.5
-kt.forecast <- kt.initial + (h * kt.drift)
+# kt.forecast <- kt.initial + (h * kt.drift)
+kt.forecast <- tail(kt, 1) + (h * kt.drift)
 kt.lo.forecast <- kt.forecast - (1.96*kt.stderr)
 kt.hi.forecast <- kt.forecast + (1.96*kt.stderr)
 
@@ -240,6 +242,9 @@ for (i in 1:length(kt.forecast)){
 
 f.nmx <- t(f.nmx)
 f.nmx <- as.data.frame(f.nmx)
+
+# Writing 
+write.csv(f.nmx, "f.nmx.csv")
 
 # Preparing Plot
 library(reshape2) 

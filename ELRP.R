@@ -27,6 +27,7 @@ lfpr <- lfpr[-seq(1,39), ]
 
 # Calculating Rx (the rate of Retirement)
 rx <- 1-lfpr
+#rx <- rx[-1,]
 
 # Calculating Tx (probability of remaining in the labor force)
 tx <- 1-rx
@@ -145,10 +146,25 @@ avg.ex[31, ] <- ex[31, ]/2
 
 # ELRP calculation
 
-ELRP <- matrix(0, 31, 46)
+prev.elrp <- matrix(0, 31, 46)
 
-for (i in 1:nrow(ELRP)){
-  for(i in 1:ncol(ELRP)){
-    ELRP[i, j] <- sx[i, j]*gamma[i, j]
+for (j in 1:ncol(prev.elrp)){
+  for(i in 1:nrow(prev.elrp)){
+    prev.elrp[i, j] <- sx[i, j]*gamma[i, j]*tx[i+1, j]*(1-0.5*nqx[i, j])*avg.ex[i, j]
   }
+}
+
+ELRP <- apply(prev.elrp, 2, FUN = sum)*rho
+
+
+# Get e20 for all years
+
+get.e20 <- function(x){
+  return(life.table(newages, x)$ex[21])
+}
+
+e20 <- c()
+
+for (i in 1:46){
+  e20[i] <- get.e20(nmx[, i])
 }
