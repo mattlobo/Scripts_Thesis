@@ -168,3 +168,9 @@ e20 <- c()
 for (i in 1:46){
   e20[i] <- get.e20(nmx[, i])
 }
+
+plot.ELRP <- data.frame(ELRP/e20)
+plot.ELRP$years <- seq(1980, 2025) 
+
+qplot(data = plot.ELRP, x = years, y = ELRP,
+      geom = c("point", "path"), ylab = " ELRP / Life Expectancy at age 20", xlab = "Years")
