@@ -19,6 +19,11 @@ f.lfpr <- f.lfpr[, -1]
 # Combining the data
 lfpr <- cbind(or.lfpr, f.lfpr)
 
+# Study 1 - 1980 lfpr
+
+# lfpr <- rep(or.lfpr[, 1], times = 46)
+# lfpr <- matrix(lfpr, ncol = 46)
+
 # Renanimng columns
 colnames(lfpr) <- c(or.years, f.years)
 
@@ -74,11 +79,16 @@ get.lt <- function(x){
 }
 
 # Read nmx files to generate yearly life tables
-or.nmx <- read.csv("Single_Age_Rates.csv", header = T)
-or.nmx <- or.nmx[, -1]
-f.nmx <- read.csv("f.nmx.csv", header = T)
-f.nmx <- f.nmx[, -1]
-nmx <- cbind(or.nmx, f.nmx)
+# or.nmx <- read.csv("Single_Age_Rates.csv", header = T)
+# or.nmx <- or.nmx[, -1]
+# f.nmx <- read.csv("f.nmx.csv", header = T)
+# f.nmx <- f.nmx[, -1]
+# nmx <- cbind(or.nmx, f.nmx)
+
+# Study 2 - nmx 1980
+nmx <- rep(or.nmx[, 1], times = 46)
+nmx <- matrix(nmx, ncol = 46)
+
 colnames(nmx) <- c(or.years, f.years)
 
 # We only need nmx starting at age 20...
@@ -169,8 +179,26 @@ for (i in 1:46){
   e20[i] <- get.e20(nmx[, i])
 }
 
-plot.ELRP <- data.frame(ELRP/e20)
+
+plot.ELRP <- (ELRP/e20)*100
+plot.ELRP <- data.frame(plot.ELRP)
 plot.ELRP$years <- seq(1980, 2025) 
 
-qplot(data = plot.ELRP, x = years, y = ELRP,
-      geom = c("point", "path"), ylab = " ELRP / Life Expectancy at age 20", xlab = "Years")
+plot.e20 <- data.frame(e20)
+plot.e20$years <- seq(1980, 2025) 
+
+# study.0 <- plot.ELRP
+# study.1 <- plot.ELRP
+study.2 <- plot.ELRP
+
+final.plot <- rbind(study.0, study.1, study.2)
+final.plot$type <- rep(c("Baseline Scenario", "1980 LFPR Scenario", "1980 Death Rates Scenario"), each = 46)
+
+write.csv(final.plot, "Baseline+Scenarios.csv")
+
+library(ggplot2)
+
+qplot(data = final.plot, x = years, y = plot.ELRP, colour = type,
+      geom = c("point", "path"), ylab = "ELRP / Life Expectancy at age 20", xlab = "Years") + theme(legend.position = "bottom") +
+                                                                                                  labs(color = "")
+
